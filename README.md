@@ -15,11 +15,13 @@ ClaudeHopper provides a simple, intuitive interface for managing MCP servers tha
 - Fetch up-to-date configurations for servers
 - Manually add custom servers
 - Check for new servers periodically
+- Import server configurations directly from clipboard
 
 ## Features
 
 - **Server Management**: Enable, disable, add, and remove MCP servers from your Claude Desktop configuration
 - **Real Server Discovery**: Fetch available servers from the official MCP servers repository
+- **Clipboard Monitoring**: Automatically detect and import server configurations copied from websites
 - **Configuration Backups**: Easily backup and restore your server configurations
 - **User-Friendly Interface**: Simple menu bar app with intuitive controls
 
