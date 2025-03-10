@@ -1,3 +1,5 @@
+>[!Warning] This is not a working app. Recommend using https://github.com/metatool-ai/metatool-app instead.
+
 # ClaudeHopper
 
 A macOS menu bar application that helps manage MCP (Model Context Protocol) servers for Claude Desktop.
