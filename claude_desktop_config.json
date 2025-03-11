@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "lancedb": {
+      "command": "node",
+      "args": [
+        "/Users/tfinlayson/Desktop/ClaudeHopper/index.js",
+        "/Users/tfinlayson/Desktop/PDFdrawings-MCP/Database"
+      ]
+    }
+  }
+}
