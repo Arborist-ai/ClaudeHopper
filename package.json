@@ -1,0 +1,53 @@
+{
+  "name": "claudehopper",
+  "version": "1.0.0",
+  "author": {
+    "name": "Tom Finlayson"
+  },
+  "description": "AI-Powered Construction Document Assistant for Claude",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "claudehopper": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc && shx chmod +x dist/*.js",
+    "prepare": "npm run build",
+    "watch": "tsc --watch",
+    "seed": "tsx src/seed.ts",
+    "start": "node --experimental-modules dist/index.js"
+  },
+  "keywords": [
+    "mcp",
+    "claude",
+    "construction",
+    "cad",
+    "drawings",
+    "specifications",
+    "ai",
+    "engineering",
+    "architecture"
+  ],
+  "dependencies": {
+    "@lancedb/lancedb": "^0.15.0",
+    "@langchain/community": "^0.3.24",
+    "@langchain/ollama": "^0.1.4",
+    "@modelcontextprotocol/sdk": "1.1.1",
+    "minimist": "^1.2.8",
+    "pdf-parse": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.7",
+    "shx": "^0.3.4",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  },  
+  "overrides": {
+    "@langchain/community": {
+      "@lancedb/lancedb": "^0.15.0"
+    }
+  }
+}

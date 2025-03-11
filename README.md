@@ -1,71 +1,84 @@
->[!Warning] This is not a working app. Recommend using https://github.com/metatool-ai/metatool-app instead.
+# 🏗️ ClaudeHopper - AI-Powered Construction Document Assistant
 
-# ClaudeHopper
+[![Node.js 18+](https://img.shields.io/badge/node-18%2B-blue.svg)](https://nodejs.org/en/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A macOS menu bar application that helps manage MCP (Model Context Protocol) servers for Claude Desktop.
+ClaudeHopper is a specialized Model Context Protocol (MCP) server that enables Claude and other LLMs to interact directly with construction documents, drawings, and specifications through advanced RAG (Retrieval-Augmented Generation) and hybrid search. Ask questions about your construction drawings, locate specific details, and analyze technical specifications with ease.
 
-<p align="center">
-  <img src="screenshots/claudehopper-icon.png" width="150" alt="ClaudeHopper Icon">
-</p>
+## ✨ Features
 
-## Overview
+- 🔍 Vector-based search for construction document retrieval optimized for CAD drawings, plans, and specs
+- 🏢 Specialized metadata extraction for construction industry document formats
+- 📊 Efficient token usage through intelligent document chunking and categorization
+- 🔒 Security through local document storage and processing
+- 📈 Support for various drawing types and construction disciplines (Structural, Civil, Architectural, etc.)
 
-ClaudeHopper provides a simple, intuitive interface for managing MCP servers that extend Claude Desktop's capabilities. With ClaudeHopper, you can:
-
-- Toggle servers on/off directly from your menu bar
-- Discover available MCP servers from authoritative sources
-- Fetch up-to-date configurations for servers
-- Manually add custom servers
-- Check for new servers periodically
-- Import server configurations directly from clipboard
-
-## Features
-
-- **Server Management**: Enable, disable, add, and remove MCP servers from your Claude Desktop configuration
-- **Real Server Discovery**: Fetch available servers from the official MCP servers repository
-- **Clipboard Monitoring**: Automatically detect and import server configurations copied from websites
-- **Configuration Backups**: Easily backup and restore your server configurations
-- **User-Friendly Interface**: Simple menu bar app with intuitive controls
-
-## What is MCP?
-
-MCP (Model Context Protocol) standardizes how applications provide context to Large Language Models (LLMs). It allows Claude Desktop to access external tools like filesystem access, web search, and more through standardized server implementations.
-
-## Getting Started
+## 🚀 Quick Start
 
 ### Prerequisites
 
-- macOS 11.0 or later
-- [Claude Desktop](https://claude.ai/desktop) installed
-- Node.js (for running MCP servers)
+- Node.js 18+
+- [Ollama](https://ollama.com/) for local AI models
+- Claude Desktop App
 
-### Installation
+### One-Click Setup
 
-1. Download the latest release of ClaudeHopper from the [Releases](https://github.com/Arborist-ai/ClaudeHopper/releases) page
-2. Move ClaudeHopper.app to your Applications folder
-3. Launch ClaudeHopper from your Applications folder
-4. Click the ClaudeHopper icon in the menu bar to start managing your MCP servers
+1. Download ClaudeHopper
+2. Run the setup script:
 
-### Configuration
+```bash
+cd ~/Desktop/claudehopper
+chmod +x run_now_preserve.sh
+./run_now_preserve.sh
+```
 
-On first launch, ClaudeHopper will try to locate your Claude Desktop configuration file automatically. If it can't find it, you'll be prompted to select it manually.
+This will:
+- Create the necessary directory structure
+- Install required AI models
+- Process your construction documents
+- Configure the Claude Desktop App to use ClaudeHopper
 
-The default location for Claude Desktop's configuration is:
-- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+### Adding Documents
 
-## Development
+Place your construction documents in these folders:
 
-ClaudeHopper is written in Swift and SwiftUI. To build from source:
+- Drawings: `~/Desktop/PDFdrawings-MCP/InputDocs/Drawings/`
+- Specifications: `~/Desktop/PDFdrawings-MCP/InputDocs/TextDocs/`
 
-1. Clone this repository
-2. Open the project in Xcode 14 or later
-3. Build and run the project
+After adding documents, run:
+```bash
+./process_pdfdrawings.sh
+```
 
-## License
+## 🏗️ Using ClaudeHopper with Claude
+
+Try these example questions in the Claude Desktop App:
+
+```
+"What architectural drawings do we have for the project?"
+"Show me the structural details for the foundation system"
+"What are the specifications for interior paint?"
+"Find all sections discussing fire protection systems"
+```
+
+## 🛠️ Technical Architecture
+
+ClaudeHopper uses a multi-stage pipeline for processing construction documents:
+
+1. **Document Analysis**: PDF documents are analyzed for structure and content type
+2. **Metadata Extraction**: AI-assisted extraction of project information, drawing types, disciplines
+3. **Content Chunking**: Intelligent splitting of documents to maintain context
+4. **Vector Embedding**: Creation of semantic representations for efficient search
+5. **Database Storage**: Local LanceDB storage for vector search capabilities
+
+## 📝 Available Search Tools
+
+ClaudeHopper provides several specialized search capabilities:
+
+- `catalog_search`: Find documents by project, discipline, drawing type, etc.
+- `chunks_search`: Locate specific content within documents
+- `all_chunks_search`: Search across the entire document collection
+
+## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- [Anthropic](https://anthropic.com) for creating Claude
-- The [MCP Servers repository](https://github.com/modelcontextprotocol/servers) for providing standard server implementations
