@@ -13,7 +13,7 @@ export const userSelectedModels = {
   [ModelTaskType.EMBEDDING]: 'nomic-embed-text',     // Better for technical documents
   [ModelTaskType.SUMMARIZATION]: 'phi4',      // Updated to phi4
   [ModelTaskType.METADATA_EXTRACTION]: 'phi4', // Updated to phi4
-  [ModelTaskType.IMAGE_EMBEDDING]: 'clip',           // Standard image embedding model
+  [ModelTaskType.IMAGE_EMBEDDING]: 'granite3.2-vision',  // Using Granite 3.2 Vision for image embedding
   [ModelTaskType.SECTION_DETECTION]: 'phi4'   // Updated to phi4
 };
 
@@ -35,7 +35,7 @@ export const pdfProcessingConfig = {
   extractFirstPageOnlyForMetadata: false,
   
   // Extract images from PDFs (Phase 2 feature)
-  extractImages: false,
+  extractImages: true,
   
   // Image extraction resolution (DPI)
   imageExtractionResolution: 300

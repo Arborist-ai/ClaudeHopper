@@ -37,7 +37,8 @@
     "@langchain/ollama": "^0.1.4",
     "@modelcontextprotocol/sdk": "1.1.1",
     "minimist": "^1.2.8",
-    "pdf-parse": "^1.1.1"
+    "pdf-parse": "^1.1.1",
+    "pdf-lib": "^1.17.1"
   },
   "devDependencies": {
     "@types/node": "^22.10.7",
