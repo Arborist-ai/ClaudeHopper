@@ -134,12 +134,12 @@ export const modelRegistry: Record<ModelTaskType, Record<string, ModelConfig>> =
   },
   
   [ModelTaskType.IMAGE_EMBEDDING]: {
-    'clip': {
-      name: 'clip',
+    'granite3.2-vision': {
+      name: 'granite3.2-vision',
       provider: 'ollama',
-      description: 'Image embedding model for visual similarity search',
+      description: 'Advanced multimodal model with strong vision capabilities',
       contextSize: 0, // Not applicable for image models
-      resourceLevel: 'medium'
+      resourceLevel: 'high'
     },
     'llava:13b': {
       name: 'llava:13b',
@@ -180,7 +180,7 @@ export const defaultModels = {
   [ModelTaskType.EMBEDDING]: 'nomic-embed-text',
   [ModelTaskType.SUMMARIZATION]: 'phi4',
   [ModelTaskType.METADATA_EXTRACTION]: 'phi4',
-  [ModelTaskType.IMAGE_EMBEDDING]: 'clip',
+  [ModelTaskType.IMAGE_EMBEDDING]: 'granite3.2-vision', // Updated to use granite3.2-vision
   [ModelTaskType.SECTION_DETECTION]: 'phi4'
 };
 

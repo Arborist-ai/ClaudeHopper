@@ -48,7 +48,7 @@ if [ -z "$METADATA_MODEL" ]; then
 fi
 
 if [ -z "$IMAGE_MODEL" ]; then
-  IMAGE_MODEL="clip"
+  IMAGE_MODEL="granite3.2-vision"
 fi
 
 if [ -z "$SECTION_MODEL" ]; then

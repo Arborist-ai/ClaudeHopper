@@ -70,7 +70,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
 async function runServer() {
   try {
-    await connectToLanceDB(databaseUrl, defaults.CHUNKS_TABLE_NAME, defaults.CATALOG_TABLE_NAME);
+    await connectToLanceDB(databaseUrl, defaults.CHUNKS_TABLE_NAME, defaults.CATALOG_TABLE_NAME, defaults.IMAGE_TABLE_NAME);
     const transport = new StdioServerTransport();
     await server.connect(transport);
     console.error("LanceDB MCP server running on stdio");

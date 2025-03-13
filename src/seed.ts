@@ -21,6 +21,9 @@ import * as crypto from 'crypto';
 import config from './config';
 import { extractMetadata, mergeMetadata } from './utils/metadata_extractor';
 import { preprocessPdf, shouldSplitPdf } from './utils/pdf_processor';
+import { PDFDocument } from 'pdf-lib';
+import { extractImagesFromPdf, isPdfImagesAvailable, isPdftoppmAvailable } from './utils/images/extractor';
+import { processImages } from './utils/images/processor';
 
 const argv: minimist.ParsedArgs = minimist(process.argv.slice(2),{boolean: ["overwrite", "extract_images"]});
 
@@ -129,6 +132,7 @@ const directoryLoader = new DirectoryLoader(
 // Initialize models based on configuration
 const summarizationModel = new Ollama({ model: config.models.summarization });
 const embeddingModel = new OllamaEmbeddings({ model: config.models.embedding });
+const imageEmbeddingModel = new OllamaEmbeddings({ model: config.models.imageEmbedding });
 
 // Temporary directory for processing split PDFs
 const tempDir = path.join(databaseDir, "_temp_processing");
@@ -237,6 +241,8 @@ async function seed() {
     let catalogTableExists = true;
     let chunksTable: lancedb.Table;
     let chunksTableExists = true;
+    let imageTable: lancedb.Table;
+    let imageTableExists = true;
 
     try {
         catalogTable = await db.openTable(config.tables.catalog);
@@ -251,14 +257,23 @@ async function seed() {
         console.error(`Looks like the chunks table "${config.tables.chunks}" doesn't exist. We'll create it later.`);
         chunksTableExists = false;
     }
+    
+    try {
+        imageTable = await db.openTable(config.tables.images);
+    } catch (e) {
+        console.error(`Looks like the image table "${config.tables.images}" doesn't exist. We'll create it later.`);
+        imageTableExists = false;
+    }
 
     // try dropping the tables if we need to overwrite
     if (overwrite) {
         try {
             if (catalogTableExists) await db.dropTable(config.tables.catalog);
             if (chunksTableExists) await db.dropTable(config.tables.chunks);
+            if (imageTableExists) await db.dropTable(config.tables.images);
             catalogTableExists = false;
             chunksTableExists = false;
+            imageTableExists = false;
         } catch (e) {
             console.log("Error dropping tables. Maybe they don't exist!");
         }
@@ -312,17 +327,66 @@ async function seed() {
 
     console.log("Number of new chunks: ", docs.length);
     
-    /*
-     * TODO: Image Processing Enhancement
-     * Future implementation steps:
-     * 1. Extract images from PDF pages
-     * 2. Process images through embedding model
-     * 3. Store image embeddings in separate table
-     * 4. Link images to source documents with metadata
-     */
-    if (extractImages) {
-        console.log("Image extraction is not yet implemented.");
-        // This will be implemented in Phase 2
+    // Process and store images
+    if (extractImages || config.pdf.extractImages) {
+        console.log("Starting image extraction and processing...");
+        
+        // Check if required tools are available
+        const pdfImagesAvailable = await isPdfImagesAvailable();
+        const pdftoppmAvailable = await isPdftoppmAvailable();
+        
+        if (!pdfImagesAvailable && !pdftoppmAvailable) {
+            console.error("Warning: Neither pdfimages nor pdftoppm tools are available.");
+            console.error("Image extraction requires at least one of these tools to be installed.");
+            console.error("On macOS: brew install poppler");
+            console.error("On Ubuntu: apt-get install poppler-utils");
+            console.error("Image extraction will be skipped.");
+        } else {
+            // Create a directory for extracted images
+            const imagesDir = path.join(tempDir, "images");
+            await fs.promises.mkdir(imagesDir, { recursive: true });
+            
+            let allImageDocs: Document[] = [];
+            
+            // Process each catalog record to extract images
+            for (const record of catalogRecords) {
+                const sourcePath = record.metadata.source;
+                if (path.extname(sourcePath).toLowerCase() === '.pdf') {
+                    console.log(`Processing images from ${sourcePath}...`);
+                    
+                    // Extract images from the PDF
+                    const extractedImages = await extractImagesFromPdf(
+                        sourcePath, 
+                        imagesDir, 
+                        config.pdf.imageResolution
+                    );
+                    
+                    console.log(`Extracted ${extractedImages.length} images from ${sourcePath}`);
+                    
+                    // Process extracted images
+                    if (extractedImages.length > 0) {
+                        const imageDocs = processImages(extractedImages, record.metadata);
+                        allImageDocs.push(...imageDocs);
+                    }
+                }
+            }
+            
+            console.log(`Total images processed: ${allImageDocs.length}`);
+            
+            // Store image documents in the vector database
+            if (allImageDocs.length > 0) {
+                console.log("Creating image vector store...");
+                await LanceDB.fromDocuments(
+                    allImageDocs,
+                    imageEmbeddingModel,
+                    { mode: overwrite ? "overwrite" : undefined, uri: databaseDir, tableName: config.tables.images } as LanceDBArgs
+                );
+            } else {
+                console.log("No images found to process.");
+            }
+        }
+    } else {
+        console.log("Image extraction is disabled. Enable it in the configuration to use image search.");
     }
     
     // Clean up temp directory
