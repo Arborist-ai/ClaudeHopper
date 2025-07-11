@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/arborist-ai-claudehopper-badge.png)](https://mseep.ai/app/arborist-ai-claudehopper)
+
 # 🏗️ ClaudeHopper - AI-Powered Construction Document Assistant
 
 [![Node.js 18+](https://img.shields.io/badge/node-18%2B-blue.svg)](https://nodejs.org/en/)
